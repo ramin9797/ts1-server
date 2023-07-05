@@ -1,21 +1,24 @@
 const { validationResult } = require('express-validator');
 const ApiError = require('../exceptions/api-error');
 const UserService = require('../service/user-service');
+const listContainers = require('../service/docker-service');
 
 class UserController{
     async registration(req,res,next){
         try {
-            const errors = validationResult(req);
-            if(!errors.isEmpty()){
-                return next(ApiError.BadRequest("Validation errors",errors.array()));
-            }
-            const {email,password} = req.body;
-            const userData = await UserService.registration(email,password);
-            res.cookie('refreshToken',userData.refreshToken,{
-                httpOnly:true,
-                maxAge:30*24*60*60*1000 
-            })
-            return res.json(userData);
+            console.log('req.body',req.body);
+
+            // const errors = validationResult(req);
+            // if(!errors.isEmpty()){
+            //     return next(ApiError.BadRequest("Validation errors",errors.array()));
+            // }
+            // const {email,password} = req.body;
+            // const userData = await UserService.registration(email,password);
+            // res.cookie('refreshToken',userData.refreshToken,{
+            //     httpOnly:true,
+            //     maxAge:30*24*60*60*1000 
+            // })
+            return res.json({"name":"ramin"});
         } catch (error) {
             console.log('ddd',error);
             next(error)
@@ -82,6 +85,23 @@ class UserController{
         } catch (error) {
             next(error)
         }
+    }
+
+    async getDockers(req,res,next){
+        let containers = await listContainers.listContainers()
+        res.json(containers)
+    }
+    async stopDocker(req,res,next){
+        console.log('res',req.body);
+        listContainers.stopContainer(req.body.id)
+        res.json({status:'stopped'})
+    }
+
+
+    async startDocker(req,res,next){
+        console.log('res',req.body);
+        listContainers.startContainer(req.body.id)
+        res.json({status:'started'})
     }
 
 

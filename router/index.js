@@ -17,5 +17,8 @@ router.post("/logout",userController.logout)
 router.get("/activate/:link",userController.activate);
 router.get('/refresh',userController.refresh)
 router.get('/getUsers',authMiddleware,userController.getUsers);
+router.get('/dockers',userController.getDockers);
+router.post('/stopDocker',userController.stopDocker);
+router.post('/startDocker',userController.startDocker);
 
 module.exports = router;
