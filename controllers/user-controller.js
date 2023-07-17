@@ -6,21 +6,19 @@ const listContainers = require('../service/docker-service');
 class UserController{
     async registration(req,res,next){
         try {
-            console.log('req.body',req.body);
-
-            // const errors = validationResult(req);
-            // if(!errors.isEmpty()){
-            //     return next(ApiError.BadRequest("Validation errors",errors.array()));
-            // }
-            // const {email,password} = req.body;
-            // const userData = await UserService.registration(email,password);
-            // res.cookie('refreshToken',userData.refreshToken,{
-            //     httpOnly:true,
-            //     maxAge:30*24*60*60*1000 
-            // })
-            return res.json({"name":"ramin"});
+            const errors = validationResult(req);
+            if(!errors.isEmpty()){
+                return next(ApiError.BadRequest("Validation errors",errors.array()));
+            }
+            const {email,password} = req.body;
+            const userData = await UserService.registration(email,password);
+            res.cookie('refreshToken',userData.refreshToken,{
+                httpOnly:true,
+                maxAge:30*24*60*60*1000 
+            })
+            res.status(200).json(userData);
         } catch (error) {
-            console.log('ddd',error);
+            // console.log('ddd',error);
             next(error)
         }
     }

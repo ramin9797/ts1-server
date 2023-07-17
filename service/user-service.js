@@ -32,7 +32,6 @@ class UserService {
                 throw ApiError.BadRequest("User with email not found");
             }
 
-            console.log("candidate",candidate)
 
             const passwordEquals = await bcrypt.compare(password, candidate.password);
             if(!passwordEquals){
